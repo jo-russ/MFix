@@ -19,9 +19,20 @@ object Form1: TForm1
     Left = 2
     Top = 2
     Height = 20
-    TabOrder = 0
+    TabOrder = 1
     Width = 182
     onChange = ComboBox1Change
+  end
+  object CheckBox1: TCheckBox
+    Left = 2
+    Top = 42
+    Height = 20
+    Width = 182
+    TabOrder = 0
+    Caption = 'Enable'
+    Checked = True
+    State = cbChecked
+    onClick = CheckBox1Click
   end
   object Label1: TLabel
     Left = 2
@@ -49,6 +60,7 @@ object Form1: TForm1
     Width = 182
     Font.Color = clRed
     ScrollBars = ssVertical
+    TabOrder = 7
   end
   object Button1: TButton
     Left = 130
@@ -56,7 +68,7 @@ object Form1: TForm1
     Width = 50
     Height = 25
     Caption = 'Exit'
-    TabOrder = 0
+    TabOrder = 6
     OnClick = Button1Click
   end
   object Edit1: TEdit
@@ -64,7 +76,7 @@ object Form1: TForm1
     Top = 55
     Width = 30
     Height = 21
-    TabOrder = 16
+    TabOrder = 2
     Text = '0'
     OnChange = Edit1Change
   end
@@ -73,7 +85,7 @@ object Form1: TForm1
     Top = 90
     Width = 30
     Height = 21
-    TabOrder = 16
+    TabOrder = 3
     Text = '0'
     OnChange = Edit2Change
   end
@@ -82,7 +94,7 @@ object Form1: TForm1
     Top = 90
     Width = 30
     Height = 21
-    TabOrder = 16
+    TabOrder = 4
     Text = '0'
     OnChange = Edit3Change
   end
@@ -91,7 +103,7 @@ object Form1: TForm1
     Top = 125
     Width = 30
     Height = 21
-    TabOrder = 16
+    TabOrder = 5
     Text = '0'
     OnChange = Edit4Change
   end

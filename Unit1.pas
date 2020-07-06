@@ -17,12 +17,14 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Timer1: TTimer;
+    CheckBox1: TCheckBox;
     ComboBox1: TComboBox;
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
+    procedure CheckBox1Click(Sender: TObject);
     procedure Edit1Change(Sender: TObject);
     procedure Edit2Change(Sender: TObject);
     procedure Edit3Change(Sender: TObject);
@@ -40,6 +42,7 @@ var
 const
   rate = 50;
   iniName = 'MFix.ini';
+  version = '1.0.1';
 
 implementation
 
@@ -50,7 +53,7 @@ procedure TForm1.FormShow(Sender: TObject);
 var last: string;
   i: integer;
 begin
-  Application.Title := Form1.Caption;
+  Application.Title := Form1.Caption + ' v'+version;
   ini := TIniFIle.Create(ExtractFilePath(paramstr(0)) + '\' + iniName);
   ini.ReadSections(ComboBox1.Items);
   for i := 1 to ComboBox1.Items.Count do
@@ -86,41 +89,48 @@ begin
   inc(checkTime);
   label1.Caption := DupeString('|', trunc(45 * ( 1.0 - (checktime mod checkInterval) / (checkInterval-1) ) ));
   try
-    if (ComboBox1.Text <> '') then
+    if (CheckBox1.Checked) then
     begin
-      wndClass := ini.ReadString(ComboBox1.Text, 'Class','');
-      h := FindWindow(PChar(wndClass), nil);
+      if (ComboBox1.Text <> '') then
+      begin
+        wndClass := ini.ReadString(ComboBox1.Text, 'Class','');
+        h := FindWindow(PChar(wndClass), nil);
 
-      if (h = 0) then
-      begin
-        Label2.Caption := 'No window "' + wndClass + '"';
-      end else
-      begin
-        getWindowRect(h,r);
-        Label2.Caption := format('Window size: %d x %d ',[r.right - r.left, r.bottom - r.top]);
-      end;
-      if (checkTime mod checkInterval = 0) then
-      begin
-        Memo1.lines.clear();
-        fg := GetForegroundWindow();
-        if (fg = h) then
+        if (h = 0) then
         begin
-          r.top:=r.top + strtoint(Edit1.text);
-          r.left:=r.left + strtoint(Edit2.text);
-          r.right:=r.right - strtoint(Edit3.text);
-          r.bottom:=r.bottom - strtoint(Edit4.text);
-          clipcursor(@r);
-          Memo1.lines.add('Window found! Clipping mouse.');
+          Label2.Caption := 'No window "' + wndClass + '"';
         end else
         begin
-          Memo1.lines.add('Not foreground window. Unclipping mouse.');
-          clipcursor(nil);
+          getWindowRect(h,r);
+          Label2.Caption := format('Window size: %d x %d ',[r.right - r.left, r.bottom - r.top]);
         end;
+        if (checkTime mod checkInterval = 0) then
+        begin
+          Memo1.lines.clear();
+          fg := GetForegroundWindow();
+          if (fg = h) then
+          begin
+            r.top:=r.top + strtoint(Edit1.text);
+            r.left:=r.left + strtoint(Edit2.text);
+            r.right:=r.right - strtoint(Edit3.text);
+            r.bottom:=r.bottom - strtoint(Edit4.text);
+            clipcursor(@r);
+            Memo1.lines.add('Window found! Clipping mouse.');
+          end else
+          begin
+            Memo1.lines.add('Not foreground window. Unclipping mouse.');
+            clipcursor(nil);
+          end;
+        end;
+      end else
+      begin
+        Memo1.lines.clear();
+        Memo1.lines.add('Ini section not found');
       end;
     end else
     begin
       Memo1.lines.clear();
-      Memo1.lines.add('Ini section not found');
+      Memo1.lines.add('Disabled with checkbox');
     end;
   except
     on E : Exception do
@@ -179,6 +189,15 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   ini.free();
+end;
+
+procedure TForm1.CheckBox1Click(Sender: TObject);
+begin
+  if (CheckBox1.Checked) then
+  begin
+    // make it immediately check for window
+    checkTime := checkInterval-1;
+  end;
 end;
 
 end.

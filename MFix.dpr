@@ -1,7 +1,5 @@
 program MFix;
 
-{%File 'z_plug_callback.din'}
-
 uses
   Forms,
   sysutils,
