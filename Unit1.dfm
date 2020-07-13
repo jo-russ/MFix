@@ -25,7 +25,7 @@ object Form1: TForm1
   end
   object CheckBox1: TCheckBox
     Left = 2
-    Top = 42
+    Top = 55
     Height = 20
     Width = 182
     TabOrder = 0
